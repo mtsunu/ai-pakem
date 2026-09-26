@@ -10,8 +10,10 @@ Goal: turn a rough idea into documents that can be re-read in later sessions.
 | Stage | Output | Template |
 |---|---|---|
 | 1. Brainstorming | `docs/brief.md` | `assets/brief.md` |
-| 2. Tech stack | `docs/adr/0000-tech-stack.md` | `assets/adr.md` |
-| 3. MVP features | `docs/tasks/<slug>.md` (backlog) | `assets/feature.md` |
+| 2. Tech stack | `docs/adr/0000-tech-stack.md` | `.agents/skills/start-task/assets/adr.md` |
+| 3. MVP features | `docs/tasks/<slug>.md` (backlog) | `.agents/skills/start-task/assets/feature.md` |
+
+The ADR and feature templates live in the `start-task` skill (single source); it is always installed alongside this one.
 
 ## Language
 - Talk to the user in the user's language.
@@ -62,7 +64,7 @@ Ask first: does the user already have a stack in mind?
 - After the user chooses: the other options go to "Rejected alternatives" with the reasons.
 
 ## 3. MVP features → backlog
-- Each MVP feature becomes one feature file (`assets/feature.md`) at `docs/tasks/<slug>.md` with `Status: Backlog` and a priority from the user.
+- Each MVP feature becomes one feature file (the `start-task` feature template) at `docs/tasks/<slug>.md` with `Status: Backlog` and a priority from the user.
 - Large, vague, or business-rule-heavy features → detail the **feature acceptance criteria (F-AC)** and edge cases — the parts most often missed. Clear features only need the expected outcome + short F-AC.
 - Do not split features into tasks here; `start-task` does that when a feature is started.
 

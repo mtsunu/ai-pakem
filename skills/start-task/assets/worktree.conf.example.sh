@@ -31,7 +31,7 @@ wt_env_overrides() {
       ;;
     .env.testing)
       echo "DB_DATABASE=$(wt_db_name)_test"
-      # Example: test DB on the shared RAM instance (see ramdb.example.sh)
+      # Example: test DB on the shared test instance (see ramdb.example.sh)
       # echo "DB_PORT=3307"
       ;;
   esac

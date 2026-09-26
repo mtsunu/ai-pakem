@@ -33,7 +33,7 @@ Only write what is NOT visible from the code/config. Aim for < 100 lines.
 - Bugfix: first write a test that reproduces the bug (it must fail), then fix it.
 - Exceptions: <e.g. docs/config/copy changes> — state the reason in the task file.
 - Test data: <e.g. factories, test DB `<name>` — never the dev DB>
-- Test DB: `<command that starts the test DB>` — <RAM (see `ramdb.example.sh` in the start-task skill) / regular>
+- Test DB: `<command that starts the test DB>` — <dedicated test instance with durability off (see `ramdb.example.sh` in the start-task skill; `RAM=0` on disk, `RAM=1` in RAM) / regular>
 - <Slow/integration tests: how to run them separately>
 - NEVER modify, delete, or skip a failing test to make it pass without the user's approval.
 

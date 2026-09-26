@@ -70,7 +70,7 @@ git commit -am "Update ai-pakem skills"
 
 ```
 skills/
-├── project-kickoff/   SKILL.md + assets/ (brief, adr, feature)
+├── project-kickoff/   SKILL.md + assets/ (brief; ADR & feature templates come from start-task)
 ├── init-agents/       SKILL.md + assets/ (AGENTS.md template, subagent configs, permission templates)
 ├── start-task/        SKILL.md + assets/ (task, feature, adr, review prompt, worktree.sh, backlog.sh, ramdb.example.sh)
 └── research/          SKILL.md

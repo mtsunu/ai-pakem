@@ -66,7 +66,7 @@ Also check `docs/brief.md` and the ADRs from `project-kickoff` → sources for S
 Put what the minimum requirements need first:
 - Conflicts from step 3: which is right?
 - Pitfall candidates: which are real / still relevant? Anything to add?
-- Testing: exceptions to mandatory tests, test data/DB, slow tests run separately, test DB in RAM or regular
+- Testing: exceptions to mandatory tests, test data/DB, slow tests run separately, dedicated test DB instance (`ramdb.example.sh`, on disk or in RAM) or regular
 - Tools in use (Claude Code, opencode, Codex, Gemini CLI, …) and the main / reviewer / research model for each
 - Worktree: setup commands (install, create DB + migrate/seed) and cleanup (drop DB)
 - Don'ts: actions the agent must never take
