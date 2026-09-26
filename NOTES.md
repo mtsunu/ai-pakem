@@ -76,7 +76,8 @@ Yang tersedia tiap sesi hanyalah file yang dibaca ulang:
 
 21. **Instalasi: `npx skills add mtsunu/ai-pakem -s '*' -a codex -a claude-code -y`** (dengan `DISABLE_TELEMETRY=1`), dijalankan dari root repo proyek. `ai-pakem` di-host di **GitHub public**; tidak perlu ada salinan lokal. Diuji 2026-09-26 (skills CLI 1.7.0, sumber path lokal): file asli di `.agents/skills/`, symlink relatif `.claude/skills/<nama>` → `../../.agents/skills/<nama>`, bit eksekusi terjaga, git menyimpan symlink sebagai symlink, `skills-lock.json` (sumber + hash) dibuat, tidak ada yang ditulis ke `~/.agents` / `~/.claude/skills` / `~/.config/opencode` (hanya cache paket di `~/.npm`).
     - **`-a` wajib eksplisit.** Auto-deteksi salah: di mesin ini mendeteksi 8 tool (Antigravity, Claude Code, Codex, Cursor, Gemini CLI, Junie, OpenCode, Zed) padahal opencode/gemini tidak ada di PATH, dan `codex` hanya shim dari cmux. Lebih berbahaya: `-a claude-code` saja menaruh salinan **hanya** di `.claude/skills/` tanpa `.agents/skills/`, sehingga semua path skrip rusak. `-a codex` = cara CLI menulis folder bersama `.agents/skills/`.
-    - Windows → `--copy`. Update: `npx skills update -p` lalu review `git diff .agents/skills` (perilaku update terhadap perubahan lokal belum diuji).
+    - Windows → `--copy`.
+    - **Hasil uji update (dari GitHub, 2026-09-26):** `npx skills update -p` menimpa folder skill **tanpa peringatan** walau upstream tidak berubah — edit yang belum di-commit hilang, file tambahan terhapus. Menjalankan ulang `add` juga menimpa (menulis "overwrites"). `update` tidak berlaku untuk skill yang dipasang dari path lokal. Maka: **`.agents/skills/` = vendor, tidak pernah diedit di proyek**; kustomisasi di AGENTS.md & `.agents/worktree.conf.sh`. Urutan update: `git status` bersih → `npx skills update -p` → review `git diff .agents/skills` → commit.
     - `install.sh` batal. `init-agents` tidak lagi menyalin skill; hanya mengecek keempat skill + `skills-lock.json` ada, dan memberi perintah di atas kalau belum.
 
 22. **Nama repo: `ai-pakem`** ("pakem" = aturan baku). Dipakai di perintah instalasi `npx skills add mtsunu/ai-pakem …`. Folder lokal masih `~/Work/llm-templates` (belum di-rename).
@@ -94,8 +95,8 @@ Sumber yang berlaku ada di `skills/` (draf lama di notes ini sudah dihapus karen
 - [x] Instalasi via skills CLI diuji dari path lokal.
 - [x] `git init` (belum ada commit).
 - [x] GitHub: `mtsunu/ai-pakem`.
-- [ ] Commit pertama + push ke GitHub (dilakukan user / atas perintah eksplisit).
-- [ ] Uji instalasi dari GitHub; uji `npx skills update -p` terhadap skill yang sudah diubah lokal.
+- [x] Commit pertama + push ke https://github.com/mtsunu/ai-pakem.
+- [x] Uji instalasi dari GitHub & perilaku `update` (lihat #21).
 - [ ] Putuskan sumber tunggal `adr.md` & `feature.md` (usulan: di `start-task`, `project-kickoff` merujuk `../start-task/assets/`).
 - [ ] Opsional: varian `ramdb` di disk (`RAM=0`) — lihat #20.
 - [ ] Review isi skill bersama user.

@@ -55,7 +55,16 @@ Commit all three. Teammates only need to clone the project repo.
 - `DISABLE_TELEMETRY=1` turns off the CLI's default usage telemetry.
 - Start a new agent session afterwards, then say "kickoff the project" (new idea) or "init agents" (existing code).
 
-Update: `npx skills update -p`, review `git diff .agents/skills`, commit.
+**Treat `.agents/skills/` as vendored — never edit it in a project.** `npx skills update` and re-running `add` overwrite skill folders without warning, deleting uncommitted edits and extra files. Project-specific customization goes in `AGENTS.md` and `.agents/worktree.conf.sh`, which the CLI never touches.
+
+Update safely:
+
+```bash
+git status --short          # must be clean
+npx skills update -p        # GitHub-installed skills only
+git diff .agents/skills     # review
+git commit -am "Update ai-pakem skills"
+```
 
 ## Repository layout
 

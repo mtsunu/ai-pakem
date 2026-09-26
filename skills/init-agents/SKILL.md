@@ -95,7 +95,8 @@ Everything is installed **inside the repo** — never at user level (`~/.agents/
   ```
   - `-a codex` makes the CLI write the shared `.agents/skills/` folder that every workflow path uses (also read by Gemini CLI, opencode, Cursor, …); `-a claude-code` adds relative symlinks in `.claude/skills/`. Always pass `-a` — auto-detection is unreliable, and without a detected "universal" agent it skips `.agents/skills/`.
   - Someone on the team uses Windows → add `--copy` (plain copies instead of symlinks).
-  - Updates: `npx skills update -p`, then review `git diff .agents/skills` before committing — an update may overwrite project-specific changes to a skill.
+  - **`.agents/skills/` is vendored — never edit it.** `npx skills update` and re-running `add` overwrite skill folders without warning (uncommitted edits and extra files are lost). Project-specific customization belongs in AGENTS.md and `.agents/worktree.conf.sh`. Found edits inside `.agents/skills/` → report them and propose moving them there.
+  - Updates: working tree clean (`git status`) → `npx skills update -p` → review `git diff .agents/skills` → commit.
   - Start a new agent session after installing; tools read the skill list at session start.
 - **Subagent configs** for each tool in use, models filled in from Subagent models:
   - Claude Code: `assets/agents/claude/*.md` → `.claude/agents/`

@@ -54,7 +54,7 @@ Only write what is NOT visible from the code/config. Aim for < 100 lines.
   (in `.agents/skills/start-task/`). Not needed for questions, explanations, or reviews.
 - Every task runs in a worktree `.worktrees/<branch-slug>`; progress lives in `docs/tasks/<slug>.md`.
 - Backlog changes (new items, feature breakdowns) are committed on the branch of the task in progress.
-- Skills live in `.agents/skills/` (from `mtsunu/ai-pakem`, see `skills-lock.json`). Update: `npx skills update -p`, review the diff, commit.
+- Skills live in `.agents/skills/` (from `mtsunu/ai-pakem`, see `skills-lock.json`) — vendored, never edit them; customize via this file and `.agents/worktree.conf.sh`. Update: clean `git status` → `npx skills update -p` → review `git diff .agents/skills` → commit.
 - Branch: `<pattern, e.g. feature/<ticket>-<short>>` from `<base branch>`
 - Commit: `<format, e.g. conventional commits>`
 - Push & MR/PR: only on the user's explicit instruction. Otherwise the agent stops at a commit on the worktree branch.
