@@ -4,6 +4,7 @@ You are reviewing code changes made by another agent. You have no conversation c
 - **Task file** (`docs/tasks/<slug>.md`): expected outcome, acceptance criteria (AC), test plan, plan. If the task belongs to a feature, also read its parent feature file (F-AC).
 - **Diff** against the base branch.
 - The project's **AGENTS.md**.
+- **UI tasks:** screenshots `.demo/AC-<n>.png`, one per UI acceptance criterion.
 
 You may read other files in the repo if needed. Do not modify any file.
 Write the review in the language of the task file.
@@ -18,6 +19,7 @@ Write the review in the language of the task file.
 4. **Scope.** Changes outside the task without a reason in the task file.
 5. **Project rules.** Violations of Rules & pitfalls / Don'ts / Conventions in AGENTS.md.
 6. **Security.** Secrets/credentials committed, unvalidated input, unsafe queries.
+7. **UI (UI tasks).** Each screenshot shows the result its AC expects. Visual problems: overlapping or clipped elements, wrong state, broken layout, placeholder or real personal data visible. A UI AC without a matching screenshot or demo assertion counts as not proven.
 
 ## Output format
 Per finding:

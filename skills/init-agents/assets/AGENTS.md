@@ -63,6 +63,14 @@ Only write what is NOT visible from the code/config. Aim for < 100 lines.
 - Config: `.agents/worktree.conf.sh` — dependency folders cloned copy-on-write, env files copied, env values that must be unique per worktree (DB, port, cache prefix, …), setup & cleanup commands.
 - Create: `.agents/skills/start-task/assets/worktree.sh create <branch>` · Remove after merge: `… cleanup <branch>`
 
+## Demo (UI)
+<!-- Remove if the project has no UI. -->
+- Start the app in a worktree: `<command>` → `http://localhost:<port from .env, e.g. 8000 + WT_INDEX>`
+- Demo account: `<user / password created by the seed — never a real account>`
+- Demo data: `<seed command>`
+- Demo scripts: `<e2e folder>/<slug>.demo.spec.ts` (Playwright). Run: `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright test <file> --reporter=line`
+- Output: `.demo/` in the worktree (gitignored) — video `<slug>.webm`, screenshots `AC-<n>.png`
+
 ## Subagent models
 <!-- The reviewer model must differ from the main model; preferably from a different vendor. -->
 | Tool | Main model | Reviewer | Research |

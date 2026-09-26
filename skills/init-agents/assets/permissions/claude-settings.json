@@ -1,4 +1,7 @@
 {
+  "env": {
+    "PLAYWRIGHT_BROWSERS_PATH": "0"
+  },
   "permissions": {
     "allow": [
       "Bash(.agents/skills/start-task/assets/worktree.sh *)",
@@ -11,7 +14,9 @@
       "Bash(git commit *)",
       "Bash(git worktree list *)",
       "Bash(<test command> *)",
-      "Bash(<lint command> *)"
+      "Bash(<lint command> *)",
+      "Bash(npx playwright test *)",
+      "Bash(ffmpeg *)"
     ],
     "ask": [
       "Bash(git push *)"

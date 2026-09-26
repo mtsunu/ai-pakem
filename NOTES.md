@@ -82,6 +82,12 @@ Yang tersedia tiap sesi hanyalah file yang dibaca ulang:
 
 22. **Nama repo: `ai-pakem`** ("pakem" = aturan baku). Dipakai di perintah instalasi `npx skills add mtsunu/ai-pakem …`. Folder lokal masih `~/Work/llm-templates` (belum di-rename).
 
+23. **Demo video untuk tugas UI (wajib).** `start-task` langkah 8 (sebelum review, supaya reviewer dapat screenshot): skrip Playwright `<slug>.demo.spec.ts` dari `assets/demo.example.spec.ts` — satu skenario per AC UI, caption di layar, `slowMo`, screenshot `AC-<n>.png` **per elemen** (bukan full page), video `<slug>.webm`. Skrip di-commit (sekaligus test E2E); output di `.worktrees/<branch-slug>/.demo/` (gitignored, ikut terhapus saat cleanup). Review ulang yang mengubah UI → rekam ulang. Triase punya penanda `UI: yes|no`; template task punya bagian Demo; AGENTS.md punya bagian Demo (cara start app, akun demo, seed — **data demo saja, tidak pernah data asli**).
+    - Hemat token: model tidak pernah membuka video; selector dari kode komponen (`getByRole`/`getByLabel`/`getByText`), tidak dump HTML/DOM; reporter `line`; maks. 2 perbaikan skrip; agent utama tidak membuka screenshot (hanya reviewer).
+    - Browser Playwright lokal proyek: `PLAYWRIGHT_BROWSERS_PATH=0` (browser di `node_modules`). Di Claude Code diset lewat `env` di `.claude/settings.json`; command jangan diberi prefix env var karena rule izin tidak cocok.
+    - **Diuji 2026-09-26** (Playwright 1.63, situs statis): lulus 4,3 s, video 29 KB, screenshot elemen 1264×77 ≈ 130 token gambar Claude (full viewport 1280×720 ≈ 1.200), caption tampil di frame. Browser terpasang di `node_modules/playwright-core/.local-browsers`. `ffmpeg` tidak ada di mesin ini → video tetap `.webm`.
+    - Perkiraan tambahan token per tugas UI kecil ±5–15 ribu (belum diukur pada tugas nyata).
+
 ## Template & skill
 Sumber yang berlaku ada di `skills/` (draf lama di notes ini sudah dihapus karena basi):
 - `skills/project-kickoff/` — brief, ADR, file fitur

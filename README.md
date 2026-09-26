@@ -31,6 +31,7 @@ Existing project:                              init-agents → start-task, start
 - **Automated tests are mandatory.** Agents must never weaken, delete, or skip a failing test without approval.
 - **Every task runs in its own git worktree** with its own `.env` and database; dependencies are cloned copy-on-write.
 - **Every task is reviewed by a subagent running a different model.**
+- **UI tasks come with a demo video** (Playwright) and one screenshot per acceptance criterion; the reviewer checks the screenshots.
 - **The agent never pushes or opens an MR/PR** unless explicitly told to.
 - **Skills are written in English; the agent answers in the user's language.**
 

@@ -16,6 +16,7 @@ AGENTS.md fits this workflow when it has:
 4. **`start-task` trigger** in Workflow, **and** all four skills (`project-kickoff`, `init-agents`, `start-task`, `research`) installed in the repo under `.agents/skills/`, with `skills-lock.json` committed.
 5. **Worktree setup** — `.agents/worktree.conf.sh` exists and `.worktrees/` is in `.gitignore`.
 6. **Subagent models** — for every tool in use, the reviewer model differs from the main model.
+7. **Demo** (projects with a UI) — how to start the app, demo account, demo data, where demo scripts live; `.demo/` in `.gitignore`; Playwright available.
 
 Other template sections are optional.
 
@@ -43,6 +44,7 @@ Also check `docs/brief.md` and the ADRs from `project-kickoff` → sources for S
 - **Commands:** scripts in dependency files, Makefile, CI config, README.
 - **Code map:** top-level structure + where business logic & tests live. Critical modules are asked (step 4), not guessed from folder size.
 - **Testing:** test framework & config, test folders, test-specific DB/env config, the CI test step. Note if there is no test infrastructure. Do not run tests.
+- **UI:** is there a web/mobile/desktop UI? Existing E2E framework (Playwright, Cypress, …), seeders/fixtures usable as demo data.
 - **Worktree:** installed dependency folders (e.g. `vendor/`, `node_modules/`), uncommitted env files, env values that must be unique per worktree (DB name, port, cache prefix, Redis DB number, queue name).
 - **Conventions:** lint/format config, consistent patterns in the code.
 - **Workflow:** branch & commit naming patterns from `git log`.
@@ -69,6 +71,7 @@ Put what the minimum requirements need first:
 - Testing: exceptions to mandatory tests, test data/DB, slow tests run separately, dedicated test DB instance (`ramdb.example.sh`, on disk or in RAM) or regular
 - Tools in use (Claude Code, opencode, Codex, Gemini CLI, …) and the main / reviewer / research model for each
 - Worktree: setup commands (install, create DB + migrate/seed) and cleanup (drop DB)
+- Demo (projects with a UI): how to start the app, demo account, seed command, folder for demo scripts
 - Don'ts: actions the agent must never take
 - ADR location if none was found (or "none yet"); backlog in `docs/tasks/` or in an issue tracker?
 - Critical modules
@@ -81,7 +84,7 @@ Questions the user skips → leave `<...>`.
 
 ## 5. Write AGENTS.md
 - **NEW mode:** fill in the template, remove sections that do not apply and the guidance comments. At most ~100 lines. Never copy the full library list.
-- **Workflow rules are never "not applicable":** Testing, the `start-task` trigger, the push & MR policy (only on the user's explicit instruction), Worktree setup, and Subagent models always stay unless the user asks to remove them.
+- **Workflow rules are never "not applicable":** Testing, the `start-task` trigger, the push & MR policy (only on the user's explicit instruction), Worktree setup, Subagent models, and Demo (projects with a UI) always stay unless the user asks to remove them.
 - **ALIGN mode:** present the proposed changes as a diff; write only after approval.
 - **Team repo:** commit on a new branch (never on the main branch); push & MR/PR only on the user's explicit instruction — every team member's agent reads AGENTS.md. Workflow rules are mandatory for every team member; review is for visibility, not for negotiating the rules.
 - If CLAUDE.md or another tool's instruction file holds project instructions, offer to move them into AGENTS.md.
@@ -108,7 +111,8 @@ Everything is installed **inside the repo** — never at user level (`~/.agents/
   - Replace the `<test command>` / `<lint command>` placeholders with the real commands from Commands; drop entries that do not apply.
   - File already exists → merge the entries, never overwrite; show the diff.
 - **Worktree:** `.agents/worktree.conf.sh` from `worktree.conf.example.sh` in the `start-task` skill, adapted to step 2 facts and step 4 answers. Unknowns → TODO comments.
-- **`.gitignore`:** add `.worktrees/` if missing.
+- **`.gitignore`:** add `.worktrees/` and `.demo/` if missing.
+- **Playwright** (web UI without it) → propose adding `@playwright/test` as a devDependency; install browsers with `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium` so they stay inside the project. Installing is a state change → only after approval.
 - **Configs already in the repo** (subagents, permissions, `worktree.conf.sh`) → compare with the templates. If different, show the difference and offer an update. Never overwrite silently — there may be project-specific changes.
 - Team repo: all of this is committed on the same branch as the AGENTS.md change.
 

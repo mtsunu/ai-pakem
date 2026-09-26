@@ -7,6 +7,7 @@ Feature: <slug of the parent feature file; leave empty if standalone>
 Depends: <slugs of tasks that must be Done first; leave empty if none>
 Branch: <branch name; empty while in Backlog>
 Triage: Small | Large | Costly decision
+UI: yes | no
 Started: YYYY-MM-DD
 
 <!-- A backlog item only needs the header + "Expected outcome" (+ draft AC if known). The rest is filled in when the task is worked on. -->
@@ -41,6 +42,9 @@ Started: YYYY-MM-DD
 
 ## Root cause
 <!-- Bugs only. Write "candidate" until verified. -->
+
+## Demo
+<!-- UI tasks: demo script path, video `.demo/<slug>.webm`, screenshots `.demo/AC-<n>.png` (gitignored, in the worktree). -->
 
 ## Review
 <!-- Per round: reviewer model, findings (severity), follow-up. -->
