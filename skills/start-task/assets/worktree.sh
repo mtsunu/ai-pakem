@@ -6,7 +6,8 @@
 #   worktree.sh list                      list task worktrees
 #   worktree.sh graph [--no-cluster]      refresh graphify-out/ of the current checkout from its diff
 #
-# graphify (optional): if the main checkout has graphify-out/ (gitignored), create copies it
+# graphify (optional; project-local .agents/.venv/bin/graphify preferred over PATH):
+# if the main checkout has graphify-out/ (gitignored), create copies it
 # copy-on-write, and graph/cleanup re-extract only the files changed since the commit the graph
 # was built at (graphify-out/.built-at). No LLM, no tokens. Output goes to .worktrees/.graphify.log.
 #
@@ -68,11 +69,19 @@ set_env_var() {
   mv "$tmp" "$file"
 }
 
+# graphify binary + Python: project-local venv first, then PATH.
+GRAPHIFY_BIN=""; GRAPHIFY_PY=""
+if [ -x "$MAIN_ROOT/.agents/.venv/bin/graphify" ]; then
+  GRAPHIFY_BIN="$MAIN_ROOT/.agents/.venv/bin/graphify"; GRAPHIFY_PY="$MAIN_ROOT/.agents/.venv/bin/python"
+elif command -v graphify >/dev/null; then
+  GRAPHIFY_BIN=graphify
+fi
+
 # Update graphify-out/ in $1 from the files changed since graphify-out/.built-at.
 # $2 = 1 to recluster, 0 to skip clustering (faster). Never fails the caller.
 graph_update() {
   local dir=$1 cluster=${2:-1} log="$WT_BASE_DIR/.graphify.log"
-  [ -f "$dir/graphify-out/graph.json" ] && command -v graphify >/dev/null || return 0
+  [ -f "$dir/graphify-out/graph.json" ] && [ -n "$GRAPHIFY_BIN" ] || return 0
   mkdir -p "$WT_BASE_DIR"
   (
     cd "$dir" || exit 0
@@ -82,7 +91,7 @@ graph_update() {
       changed=$( { git diff --name-only "$base"; git ls-files --others --exclude-standard; } \
         | { grep -v '^graphify-out/' || true; } | sort -u)
       if [ -z "$changed" ]; then git rev-parse HEAD > graphify-out/.built-at; exit 0; fi
-      py=$(cat graphify-out/.graphify_python 2>/dev/null || echo python3)
+      py=${GRAPHIFY_PY:-$(cat graphify-out/.graphify_python 2>/dev/null || echo python3)}
       rc=0
       # Diff mode uses graphify's internal _rebuild_code (as its post-commit hook does);
       # if that API is missing or changed, fall back to the public `graphify update`.
@@ -107,7 +116,7 @@ sys.exit(0 if ok else 1)
     fi
     if [ "$full" = 1 ]; then
       if [ "$cluster" = 0 ]; then set -- --no-cluster; else set --; fi
-      graphify update . "$@" >>"$log" 2>&1 || { echo "worktree.sh: graphify update failed (see $log)" >&2; exit 0; }
+      "$GRAPHIFY_BIN" update . "$@" >>"$log" 2>&1 || { echo "worktree.sh: graphify update failed (see $log)" >&2; exit 0; }
     fi
     git rev-parse HEAD > graphify-out/.built-at
   )
@@ -183,7 +192,7 @@ cmd_graph() {
   [ "${1:-}" = "--no-cluster" ] && cluster=0
   dir=$(git rev-parse --show-toplevel)
   [ -f "$dir/graphify-out/graph.json" ] || die "no graphify-out/graph.json in $dir"
-  command -v graphify >/dev/null || die "graphify is not installed"
+  [ -n "$GRAPHIFY_BIN" ] || die "graphify is not installed (.agents/.venv or PATH)"
   graph_update "$dir" "$cluster"
   echo "graph refreshed: $dir/graphify-out (log: $WT_BASE_DIR/.graphify.log)"
 }

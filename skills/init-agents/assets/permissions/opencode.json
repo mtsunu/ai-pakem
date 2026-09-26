@@ -6,6 +6,8 @@
       ".agents/skills/start-task/assets/worktree.sh *": "allow",
       ".agents/skills/start-task/assets/backlog.sh *": "allow",
       ".agents/skills/start-task/assets/demo.sh *": "allow",
+      "graphify query *": "allow",
+      ".agents/.venv/bin/graphify query *": "allow",
       "git status *": "allow",
       "git diff *": "allow",
       "git log *": "allow",

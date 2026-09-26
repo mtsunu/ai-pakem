@@ -18,7 +18,8 @@ Rules for every task:
 ## 1. Start or resume
 - In a worktree whose task file has `Status: Active` and `Branch:` = current branch, or the user names such a task → read it, summarize, continue from "Next steps".
 - The user names a backlog item (or asks for the next one → `backlog.sh list`, pick the highest priority that isn't blocked) → use that file as the draft; in the worktree set `Status: Active` and `Branch:`.
-- Read AGENTS.md, and only the ADRs / task files related to this task. Locate code via graphify (after your own edits, refresh it first: `worktree.sh graph --no-cluster`) or a subagent; never read the whole codebase.
+- Read AGENTS.md, and only the ADRs / task files related to this task. Never read the whole codebase.
+- Locate code: if `graphify-out/graph.json` exists, first `graphify query "<question>" --budget 1000` (`.agents/.venv/bin/graphify` if present); after your own edits refresh it with `worktree.sh graph --no-cluster`. Otherwise grep, or a subagent for wide searches.
 
 ## 2. AC, triage, test plan
 - Record the expected outcome in the user's words. Derive AC as observable behavior (not implementation), including relevant edge cases. Bug: "X no longer happens" + the correct behavior. Part of a feature: `AC-1 → F-AC-2`.

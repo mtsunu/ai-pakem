@@ -34,6 +34,7 @@ Look for `AGENTS.md` (root and subfolders), `CLAUDE.md`, `GEMINI.md`, `.cursorru
 - Testing: framework, folders, test DB/env config, CI test step — or "no test infrastructure".
 - UI: web/mobile/desktop? existing E2E framework; seeders/fixtures usable as demo data.
 - Worktree: dependency folders (`vendor/`, `node_modules/`, …), uncommitted env files, env values that must be unique per worktree (DB, port, cache prefix, Redis DB, queue).
+- Size & code graph: number of code files (`git ls-files`); graphify graph (`graphify-out/`) and binary (`.agents/.venv/bin/graphify` or PATH).
 - Conventions (lint/format config); branch & commit patterns (`git log`); existing ADR/requirement folders (don't create new ones).
 - Pitfall **candidates**: reverts/hotfixes/repeated fixes in the last ≤ 200 commits; `DO NOT`/`HACK`/`FIXME`/`WARNING` via grep; README/CONTRIBUTING warnings.
 
@@ -45,7 +46,7 @@ Look for `AGENTS.md` (root and subfolders), `CLAUDE.md`, `GEMINI.md`, `.cursorru
 - Never trim other content unilaterally. Monorepo: audit subfolder AGENTS.md too; new per-package files only if rules really differ, after asking.
 
 ## 4. Ask (all at once)
-Conflicts · pitfall candidates (real? more?) · testing (no-test exceptions, test data, slow tests, dedicated test DB via `ramdb.example.sh` on disk/RAM or regular) · tools in use + main/reviewer/research model each · worktree setup & cleanup commands · demo (start command, account, seed, script folder) · don'ts · ADR & backlog location · critical modules · summary (if not in README/brief) · branch pattern & base · team repo? · anyone on Windows?
+Conflicts · pitfall candidates (real? more?) · testing (no-test exceptions, test data, slow tests, dedicated test DB via `ramdb.example.sh` on disk/RAM or regular) · tools in use + main/reviewer/research model each · worktree setup & cleanup commands · demo (start command, account, seed, script folder) · don'ts · ADR & backlog location · critical modules · summary (if not in README/brief) · branch pattern & base · team repo? · anyone on Windows? · large codebase (hundreds of code files) without a graph → set up graphify?
 Skipped → `<...>`.
 
 ## 5. Write AGENTS.md
@@ -64,7 +65,8 @@ Skipped → `<...>`.
 - **Subagents** (models from Subagent models): Claude Code `assets/agents/claude/*.md` → `.claude/agents/`; opencode `assets/agents/opencode/*.md` → `.opencode/agents/`; other tools → note "no subagent config".
 - **Permissions:** Claude Code `assets/permissions/claude-settings.json` → `.claude/settings.json` (shared); opencode `permission` block of `assets/permissions/opencode.json` → `opencode.json`. Fill in the test/lint commands; drop what doesn't apply.
 - **Worktree:** `.agents/worktree.conf.sh` from start-task's `worktree.conf.example.sh`, adapted to steps 2 and 4; unknowns → TODO.
-- **`.gitignore`:** `.worktrees/`, `.demo/`, and `graphify-out/` if the project uses graphify (the graph is rebuilt locally, never committed; `worktree.sh` keeps it in sync from the diff).
+- **`.gitignore`:** `.worktrees/`, `.demo/`; with graphify also `graphify-out/` and `.agents/.venv/` (the graph is built locally, never committed; `worktree.sh` keeps it in sync from the diff).
+- **graphify** (only if the user said yes in step 4): install it project-local — `python3 -m venv .agents/.venv && .agents/.venv/bin/pip install graphifyy` — then build the first graph with `.agents/.venv/bin/graphify update .` (AST only, no LLM, no tokens). Add the same one-liner to AGENTS.md → Code map so every machine can set it up. Small codebases: don't offer it.
 - **Playwright** (web UI without it): propose `@playwright/test` as a devDependency, browsers via `.agents/skills/start-task/assets/demo.sh install` (project-local). Only after approval.
 - Existing configs → merge, never overwrite; show the diff.
 - **CLAUDE.md** (Claude Code only): ensure it contains `@AGENTS.md` and nothing but Claude Code-specific extras.

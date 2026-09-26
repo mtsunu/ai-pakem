@@ -24,7 +24,7 @@ Repo: https://github.com/mtsunu/ai-pakem (public). Folder lokal: `~/Work/llm-tem
 - **Backlog** = task file berstatus Backlog; dua tingkat (Fitur → Tugas); progres fitur dihitung `backlog.sh`, tidak ditulis di file fitur. Perubahan backlog di-commit di branch tugas yang berjalan. Rekomendasi backlog di akhir tugas menunggu konfirmasi user.
 - **ADR** `docs/adr/NNNN-*.md` hanya untuk keputusan mahal dibalik; tidak diedit setelah Accepted.
 - **Worktree** `.worktrees/<branch-slug>` via `worktree.sh` + `.agents/worktree.conf.sh` (clone dependency copy-on-write, `.env`/DB/port unik per worktree).
-- **graphify** (opsional): `graphify-out/` di-gitignore. `worktree.sh create` menyalinnya CoW; `worktree.sh graph` dan `cleanup` (di main, setelah merge) hanya memproses ulang file yang berubah sejak commit di `graphify-out/.built-at` — memakai fungsi internal `_rebuild_code(changed_paths=…)`, fallback ke `graphify update .`. Tanpa LLM/token. Hook bawaan graphify tidak dipakai (tidak jalan di worktree & setelah merge, tidak ter-commit, menulis ke `~/.cache`).
+- **graphify** (opsional): `graphify-out/` di-gitignore. `worktree.sh create` menyalinnya CoW; `worktree.sh graph` dan `cleanup` (di main, setelah merge) hanya memproses ulang file yang berubah sejak commit di `graphify-out/.built-at` — memakai fungsi internal `_rebuild_code(changed_paths=…)`, fallback ke `graphify update .`. Tanpa LLM/token. Hook bawaan graphify tidak dipakai (tidak jalan di worktree & setelah merge, tidak ter-commit, menulis ke `~/.cache`). Agent query lewat `graphify query "…" --budget 1000`. Tidak ada graphify → `init-agents` menawarkan (hanya untuk codebase besar) instalasi **lokal proyek** `.agents/.venv` (paket PyPI `graphifyy`) + build graph pertama; `worktree.sh` memakai venv itu lebih dulu, baru PATH.
 - **Demo** (UI): Playwright via `demo.sh` (browser lokal proyek, reporter `line`), output `.demo/` (gitignored); screenshot per elemen untuk reviewer; model tidak membuka video.
 
 ## Instalasi
@@ -36,7 +36,7 @@ Dari root repo proyek: `DISABLE_TELEMETRY=1 npx skills add mtsunu/ai-pakem -s '*
 - `worktree.sh`, `backlog.sh`: repo sementara, bash 3.2 — lulus.
 - `ramdb.example.sh` (MySQL 9.4): RAM & disk (`RAM=0`) lulus. Benchmark: hampir semua percepatan dari mematikan durabilitas (20k insert: 1,6 s → 0,6 s); RAM hanya +0–12%. PostgreSQL belum diuji.
 - Skills CLI 1.7.0: instal dari GitHub lulus (file identik, symlink relatif, bit eksekusi terjaga, tidak menulis ke home kecuali cache `~/.npm`).
-- graphify 0.9.25 diff update: hanya file di diff yang diproses (dibuktikan dengan perubahan tersembunyi yang tidak ikut), file terhapus hilang, main ter-update setelah merge + cleanup, fallback jalan, tanpa perubahan → graph tidak disentuh.
+- graphify diff update (0.9.25 via PATH dan 0.9.69 via `.agents/.venv`): hanya file di diff yang diproses (dibuktikan dengan perubahan tersembunyi yang tidak ikut), file terhapus hilang, main ter-update setelah merge + cleanup, fallback jalan, tanpa perubahan → graph tidak disentuh.
 - Demo Playwright 1.63: lulus 4,3 s; screenshot elemen ≈ 130 token gambar vs full viewport ≈ 1.200.
 
 ## Terbuka

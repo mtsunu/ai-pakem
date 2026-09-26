@@ -4,6 +4,8 @@
       "Bash(.agents/skills/start-task/assets/worktree.sh *)",
       "Bash(.agents/skills/start-task/assets/backlog.sh *)",
       "Bash(.agents/skills/start-task/assets/demo.sh *)",
+      "Bash(graphify query *)",
+      "Bash(.agents/.venv/bin/graphify query *)",
       "Bash(git status *)",
       "Bash(git diff *)",
       "Bash(git log *)",

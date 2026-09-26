@@ -11,6 +11,7 @@
 
 ## Code map
 - <area>: `<path>`
+- Code graph `graphify-out/` — per machine: `python3 -m venv .agents/.venv && .agents/.venv/bin/pip install graphifyy && .agents/.venv/bin/graphify update .`
 
 ## Commands
 ```bash
