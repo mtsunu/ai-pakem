@@ -1,11 +1,9 @@
 {
-  "env": {
-    "PLAYWRIGHT_BROWSERS_PATH": "0"
-  },
   "permissions": {
     "allow": [
       "Bash(.agents/skills/start-task/assets/worktree.sh *)",
       "Bash(.agents/skills/start-task/assets/backlog.sh *)",
+      "Bash(.agents/skills/start-task/assets/demo.sh *)",
       "Bash(git status *)",
       "Bash(git diff *)",
       "Bash(git log *)",
@@ -14,9 +12,7 @@
       "Bash(git commit *)",
       "Bash(git worktree list *)",
       "Bash(<test command> *)",
-      "Bash(<lint command> *)",
-      "Bash(npx playwright test *)",
-      "Bash(ffmpeg *)"
+      "Bash(<lint command> *)"
     ],
     "ask": [
       "Bash(git push *)"

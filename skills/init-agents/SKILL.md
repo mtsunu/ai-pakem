@@ -1,131 +1,73 @@
 ---
 name: init-agents
-description: Create a new AGENTS.md, or align an existing AGENTS.md / agent instruction files with the standard template, then install the workflow into the repo (start-task & research skills, worktree config, subagents, tool permissions). Use when the user asks to "create AGENTS.md", "init agents", "align AGENTS.md", after project-kickoff, or when another skill finds that AGENTS.md does not meet the minimum requirements.
+description: Create or align AGENTS.md and install the ai-pakem workflow config into the repo. Use for "init agents" / "create AGENTS.md", after project-kickoff, or when start-task reports missing setup.
 ---
 
 # init-agents
 
-Template: `assets/AGENTS.md`.
+Template: `assets/AGENTS.md` (aim for ≤ 50 lines; workflow rules live in `start-task`, not in AGENTS.md).
 
 ## Minimum requirements
-<!-- Referenced by other skills (e.g. start-task). Change the definition here only. -->
-AGENTS.md fits this workflow when it has:
-1. **Testing** — command to run tests, test location, and the mandatory-test rule. A project without test infrastructure may say "none yet".
-2. **Rules & pitfalls** — may be short, but must exist.
-3. **References** — location of technical decisions (ADRs) and of features & backlog (`docs/tasks/` or an issue tracker). ADRs may say "none yet".
-4. **`start-task` trigger** in Workflow, **and** all four skills (`project-kickoff`, `init-agents`, `start-task`, `research`) installed in the repo under `.agents/skills/`, with `skills-lock.json` committed.
-5. **Worktree setup** — `.agents/worktree.conf.sh` exists and `.worktrees/` is in `.gitignore`.
-6. **Subagent models** — for every tool in use, the reviewer model differs from the main model.
-7. **Demo** (projects with a UI) — how to start the app, demo account, demo data, where demo scripts live; `.demo/` in `.gitignore`; Playwright available.
+<!-- Referenced by start-task. Change the definition here only. -->
+1. **Testing** — test command and location ("none yet" allowed).
+2. **Rules & pitfalls** — may be short, must exist.
+3. **References** — ADR location; backlog location (`docs/tasks/` or tracker).
+4. **Workflow** — the `start-task` trigger line; the four skills in `.agents/skills/` and `skills-lock.json` committed.
+5. **Worktree** — `.agents/worktree.conf.sh`; `.worktrees/` in `.gitignore`.
+6. **Subagent models** — per tool in use, a reviewer model different from the main model.
+7. **Demo** (UI projects) — start command, demo account, seed, script folder; `.demo/` in `.gitignore`; Playwright available.
 
-Other template sections are optional.
+## Rules
+- **Never invent.** Only repo facts or user answers; unknowns stay `<...>`. Most important for Rules & pitfalls.
+- **Read-only until approved.** No install, migrate, build, or DB-touching tests.
+- **Team rules only.** Personal preferences belong in the user's personal tool instructions, not AGENTS.md.
+- **Everything in the repo**, never at user level (`~/.agents/`, `~/.claude/`).
+- **Save tokens:** never read the whole codebase; graphify first if `graphify-out/` exists; delegate wide exploration to a subagent (summaries + paths).
+- Talk in the user's language. NEW mode: AGENTS.md prose in the user's language; ALIGN mode: keep its language. Keep template field names and status values unchanged.
 
-## Language
-- Talk to the user in the user's language.
-- NEW mode: write AGENTS.md prose in the user's language. ALIGN mode: keep the existing AGENTS.md language.
-- Keep header field names and status values from templates exactly as they are — scripts parse them.
-
-## General rules
-- **Never invent.** Only facts from the repo or the user's answers; leave unknowns as `<...>`. Most important for Rules & pitfalls.
-- **Read-only until the user approves.** Do not run state-changing commands (install, migrate, build, tests that touch a DB).
-- **Team rules ≠ personal preferences.** The user's personal preferences (answer style, etc.) do not belong in AGENTS.md; suggest the personal instruction file of the tool they use.
-- **All workflow settings live in the repo.** Rules, models, skills, subagent configs, and permissions are committed, so results are the same on any machine.
-- **Save tokens.** Never read the whole codebase. If `graphify-out/` exists, query the graph first. If the tool supports subagents and the codebase is large, delegate exploration and ask for summaries + paths, not file dumps.
-
-## 1. Pick the mode
-Look for existing instruction files: `AGENTS.md` (root and subfolders), `CLAUDE.md`, `GEMINI.md`, `.cursorrules`, `.cursor/rules/`, `.github/copilot-instructions.md`, `CONTRIBUTING.md`.
-- **No AGENTS.md** → NEW mode. Other instruction files found are used as input.
-- **AGENTS.md exists** → ALIGN mode.
-
-Also check `docs/brief.md` and the ADRs from `project-kickoff` → sources for Summary & Tech stack.
+## 1. Mode
+Look for `AGENTS.md` (root and subfolders), `CLAUDE.md`, `GEMINI.md`, `.cursorrules`, `.cursor/rules/`, `.github/copilot-instructions.md`, `CONTRIBUTING.md`, and `docs/brief.md` + ADRs from `project-kickoff`.
+- No AGENTS.md → **NEW** (other files are input). AGENTS.md exists → **ALIGN**.
 
 ## 2. Gather facts (read-only)
-- **Tech stack:** dependency files (package.json, composer.json, go.mod, pyproject.toml, etc.) — language, framework, major versions only.
-- **Commands:** scripts in dependency files, Makefile, CI config, README.
-- **Code map:** top-level structure + where business logic & tests live. Critical modules are asked (step 4), not guessed from folder size.
-- **Testing:** test framework & config, test folders, test-specific DB/env config, the CI test step. Note if there is no test infrastructure. Do not run tests.
-- **UI:** is there a web/mobile/desktop UI? Existing E2E framework (Playwright, Cypress, …), seeders/fixtures usable as demo data.
-- **Worktree:** installed dependency folders (e.g. `vendor/`, `node_modules/`), uncommitted env files, env values that must be unique per worktree (DB name, port, cache prefix, Redis DB number, queue name).
-- **Conventions:** lint/format config, consistent patterns in the code.
-- **Workflow:** branch & commit naming patterns from `git log`.
-- **Document locations:** existing decision/requirement folders (`docs/adr/`, `docs/decisions/`, etc.). Do not create new folders.
-- **Pitfall candidates** (projects already running):
-  - `git log`, at most the last 200 commits: reverts, hotfixes, repeated fixes in the same area.
-  - `DO NOT` / `HACK` / `FIXME` / `WARNING` comments — grep for them, don't read every file.
-  - Warnings in README / CONTRIBUTING.
+- Tech stack (dependency files, major versions only); commands (scripts, Makefile, CI, README); code map (top level + business logic + tests).
+- Testing: framework, folders, test DB/env config, CI test step — or "no test infrastructure".
+- UI: web/mobile/desktop? existing E2E framework; seeders/fixtures usable as demo data.
+- Worktree: dependency folders (`vendor/`, `node_modules/`, …), uncommitted env files, env values that must be unique per worktree (DB, port, cache prefix, Redis DB, queue).
+- Conventions (lint/format config); branch & commit patterns (`git log`); existing ADR/requirement folders (don't create new ones).
+- Pitfall **candidates**: reverts/hotfixes/repeated fixes in the last ≤ 200 commits; `DO NOT`/`HACK`/`FIXME`/`WARNING` via grep; README/CONTRIBUTING warnings.
 
-  These are **candidates** only; the user must confirm them in step 4.
+## 3. Audit (ALIGN)
+- Check each claim against the repo; contradictions → conflict list, never pick silently.
+- Map content onto template sections; keep what fits nowhere.
+- Generic workflow rules already in `start-task` (mandatory tests, push policy, worktree usage, …) → propose removing them from AGENTS.md to save tokens.
+- Missing minimum requirements → into the proposal. No test infrastructure → report; setting it up is a separate task.
+- Never trim other content unilaterally. Monorepo: audit subfolder AGENTS.md too; new per-package files only if rules really differ, after asking.
 
-## 3. Audit (ALIGN mode)
-- **Check every existing claim against the repo** (versions, commands, paths). Contradictions go on a conflict list — never pick one silently.
-- **Map existing content onto template sections.** Content that fits no section is kept, not dropped.
-- **Check the minimum requirements** → what is missing goes into the proposal.
-- **Testing:** if the project has no test infrastructure, report it and suggest setting up tests as a separate task — not done in this skill.
-- **Never trim existing content unilaterally.** If it is far above ~100 lines, propose trimming separately.
-- **Monorepo:** AGENTS.md files in subfolders are audited too. Do not create per-package AGENTS.md unless the rules really differ, and ask first.
-
-## 4. Ask the user (all at once, one time)
-Put what the minimum requirements need first:
-- Conflicts from step 3: which is right?
-- Pitfall candidates: which are real / still relevant? Anything to add?
-- Testing: exceptions to mandatory tests, test data/DB, slow tests run separately, dedicated test DB instance (`ramdb.example.sh`, on disk or in RAM) or regular
-- Tools in use (Claude Code, opencode, Codex, Gemini CLI, …) and the main / reviewer / research model for each
-- Worktree: setup commands (install, create DB + migrate/seed) and cleanup (drop DB)
-- Demo (projects with a UI): how to start the app, demo account, seed command, folder for demo scripts
-- Don'ts: actions the agent must never take
-- ADR location if none was found (or "none yet"); backlog in `docs/tasks/` or in an issue tracker?
-- Critical modules
-- Project summary (if not in README/brief)
-- Workflow: branch pattern, base branch
-- Is this repo used by a team? (decides how changes are applied)
-- Does anyone on the team use Windows? (decides `--copy` for the skills install in step 6)
-
-Questions the user skips → leave `<...>`.
+## 4. Ask (all at once)
+Conflicts · pitfall candidates (real? more?) · testing (no-test exceptions, test data, slow tests, dedicated test DB via `ramdb.example.sh` on disk/RAM or regular) · tools in use + main/reviewer/research model each · worktree setup & cleanup commands · demo (start command, account, seed, script folder) · don'ts · ADR & backlog location · critical modules · summary (if not in README/brief) · branch pattern & base · team repo? · anyone on Windows?
+Skipped → `<...>`.
 
 ## 5. Write AGENTS.md
-- **NEW mode:** fill in the template, remove sections that do not apply and the guidance comments. At most ~100 lines. Never copy the full library list.
-- **Workflow rules are never "not applicable":** Testing, the `start-task` trigger, the push & MR policy (only on the user's explicit instruction), Worktree setup, Subagent models, and Demo (projects with a UI) always stay unless the user asks to remove them.
-- **ALIGN mode:** present the proposed changes as a diff; write only after approval.
-- **Team repo:** commit on a new branch (never on the main branch); push & MR/PR only on the user's explicit instruction — every team member's agent reads AGENTS.md. Workflow rules are mandatory for every team member; review is for visibility, not for negotiating the rules.
-- If CLAUDE.md or another tool's instruction file holds project instructions, offer to move them into AGENTS.md.
+- NEW: fill the template, drop sections that don't apply and all guidance comments. Keep the `start-task` trigger, Subagent models, and (UI) Demo unless the user asks otherwise.
+- ALIGN: show the change as a diff; write only after approval.
+- Team repo: commit on a new branch; push/MR only on the user's explicit instruction.
+- Project instructions in CLAUDE.md or other tool files → offer to move them into AGENTS.md.
 
-## 6. Install the workflow into the repo
-Everything is installed **inside the repo** — never at user level (`~/.agents/`, `~/.claude/`).
-
-- **Skills** are installed by the skills CLI, never copied by hand. Check that `.agents/skills/` holds all four skills and that `skills-lock.json` exists. Missing → ask the user to run, from the repo root:
+## 6. Install into the repo
+- **Skills** — check `.agents/skills/` has all four and `skills-lock.json` exists. Missing → ask the user to run from the repo root:
   ```bash
   DISABLE_TELEMETRY=1 npx skills add mtsunu/ai-pakem -s '*' -a codex -a claude-code -y
   ```
-  - `-a codex` makes the CLI write the shared `.agents/skills/` folder that every workflow path uses (also read by Gemini CLI, opencode, Cursor, …); `-a claude-code` adds relative symlinks in `.claude/skills/`. Always pass `-a` — auto-detection is unreliable, and without a detected "universal" agent it skips `.agents/skills/`.
-  - Someone on the team uses Windows → add `--copy` (plain copies instead of symlinks).
-  - **`.agents/skills/` is vendored — never edit it.** `npx skills update` and re-running `add` overwrite skill folders without warning (uncommitted edits and extra files are lost). Project-specific customization belongs in AGENTS.md and `.agents/worktree.conf.sh`. Found edits inside `.agents/skills/` → report them and propose moving them there.
-  - Updates: working tree clean (`git status`) → `npx skills update -p` → review `git diff .agents/skills` → commit.
-  - Start a new agent session after installing; tools read the skill list at session start.
-- **Subagent configs** for each tool in use, models filled in from Subagent models:
-  - Claude Code: `assets/agents/claude/*.md` → `.claude/agents/`
-  - opencode: `assets/agents/opencode/*.md` → `.opencode/agents/`
-  - Other tools: note in the report that there is no subagent config yet.
-- **Tool permissions** so the workflow runs without constant prompts, identically on every machine:
-  - Claude Code: `assets/permissions/claude-settings.json` → `.claude/settings.json` (shared, committed — not `settings.local.json`).
-  - opencode: the `permission` block of `assets/permissions/opencode.json` → `opencode.json`.
-  - Replace the `<test command>` / `<lint command>` placeholders with the real commands from Commands; drop entries that do not apply.
-  - File already exists → merge the entries, never overwrite; show the diff.
-- **Worktree:** `.agents/worktree.conf.sh` from `worktree.conf.example.sh` in the `start-task` skill, adapted to step 2 facts and step 4 answers. Unknowns → TODO comments.
-- **`.gitignore`:** add `.worktrees/` and `.demo/` if missing.
-- **Playwright** (web UI without it) → propose adding `@playwright/test` as a devDependency; install browsers with `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium` so they stay inside the project. Installing is a state change → only after approval.
-- **Configs already in the repo** (subagents, permissions, `worktree.conf.sh`) → compare with the templates. If different, show the difference and offer an update. Never overwrite silently — there may be project-specific changes.
-- Team repo: all of this is committed on the same branch as the AGENTS.md change.
+  `-a codex` writes the shared `.agents/skills/` (also read by Gemini CLI, opencode, Cursor); `-a claude-code` adds symlinks in `.claude/skills/`. Always pass `-a` (auto-detection is unreliable). Windows on the team → `--copy`. Then start a new agent session.
+  `.agents/skills/` is vendored: `update`/`add` overwrite it without warning, so never edit it — customize via AGENTS.md and `.agents/worktree.conf.sh`. Edits found there → report and propose moving them. Update: clean tree → `npx skills update -p` → review `git diff .agents/skills` → commit.
+- **Subagents** (models from Subagent models): Claude Code `assets/agents/claude/*.md` → `.claude/agents/`; opencode `assets/agents/opencode/*.md` → `.opencode/agents/`; other tools → note "no subagent config".
+- **Permissions:** Claude Code `assets/permissions/claude-settings.json` → `.claude/settings.json` (shared); opencode `permission` block of `assets/permissions/opencode.json` → `opencode.json`. Fill in the test/lint commands; drop what doesn't apply.
+- **Worktree:** `.agents/worktree.conf.sh` from start-task's `worktree.conf.example.sh`, adapted to steps 2 and 4; unknowns → TODO.
+- **`.gitignore`:** `.worktrees/`, `.demo/`.
+- **Playwright** (web UI without it): propose `@playwright/test` as a devDependency, browsers via `.agents/skills/start-task/assets/demo.sh install` (project-local). Only after approval.
+- Existing configs → merge, never overwrite; show the diff.
+- **CLAUDE.md** (Claude Code only): ensure it contains `@AGENTS.md` and nothing but Claude Code-specific extras.
 
-## 7. CLAUDE.md (only if used with Claude Code)
-Claude Code does not read AGENTS.md automatically.
-- No CLAUDE.md → create one containing `@AGENTS.md`.
-- CLAUDE.md exists → make sure it has `@AGENTS.md`; everything else is Claude Code-specific only.
-
-## 8. Report
-- Sections filled in + their source (which file / the user's answer)
-- Commands: mark as "from `<file>`, not verified"
-- Conflicts found + the user's decisions
-- Minimum requirements: met, or what is still missing
-- Test infrastructure: present / missing (if missing, suggest setting it up as a separate task)
-- Workflow in the repo: skills (installed / missing), subagent configs, permissions, `worktree.conf.sh` — newly installed / same as template / different (and the user's decision)
-- Sections still `<...>` or TODO
+## 7. Report
+Sections filled + source · commands "from `<file>`, not verified" · conflicts + decisions · minimum requirements met / missing · test infrastructure · installed vs existing vs different workflow files · remaining `<...>` / TODO.

@@ -6,7 +6,8 @@
 #   backlog.sh features  every feature with the status of each of its tasks
 #
 # When the same file exists in several places, the most advanced status wins
-# (Backlog < Split < Active < Done/Cancelled).
+# (Backlog < Active < Done/Cancelled). Feature files only store Backlog | Cancelled;
+# a feature's Split / Active / Done is computed from its task files.
 set -euo pipefail
 
 die() { echo "backlog.sh: $*" >&2; exit 1; }

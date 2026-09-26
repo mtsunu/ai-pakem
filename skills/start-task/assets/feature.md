@@ -1,18 +1,12 @@
 # <Feature name>
 
 Type: Feature
-Status: Backlog | Split | Cancelled
+Status: Backlog | Cancelled
 Priority: high | medium | low
-
-<!--
-Status only changes when the feature is split (Backlog → Split) or cancelled.
-Progress and whether the feature is done are computed from the task files that have
-`Feature: <this feature's slug>` (see backlog.sh features). Never record progress in this
-file — that avoids conflicts between worktrees working on different tasks of the same feature.
--->
+<!-- Progress is computed from task files with `Feature: <this slug>` (backlog.sh features); never track it here. -->
 
 ## Expected outcome
-<!-- The user's own words. -->
+<the user's own words>
 
 ## Scope
 - In: <...>
@@ -20,12 +14,9 @@ file — that avoids conflicts between worktrees working on different tasks of t
 
 ## Feature acceptance criteria
 - F-AC-1: <observable, testable behavior>
-- F-AC-2: <...>
 
 ## Edge cases
 - <...>
 
 ## Task breakdown
-<!-- Filled in when the feature is split. One task = one file docs/tasks/<slug>.md, mergeable on its own. -->
-1. `<task-slug>` — <summary> — covers F-AC-1, F-AC-2 — depends: -
-2. `<task-slug>` — <summary> — covers F-AC-3 — depends: `<task-slug-1>`
+1. `<task-slug>` — <summary> — F-AC-1 — depends: -

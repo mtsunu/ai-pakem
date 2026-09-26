@@ -5,6 +5,7 @@
       "*": "ask",
       ".agents/skills/start-task/assets/worktree.sh *": "allow",
       ".agents/skills/start-task/assets/backlog.sh *": "allow",
+      ".agents/skills/start-task/assets/demo.sh *": "allow",
       "git status *": "allow",
       "git diff *": "allow",
       "git log *": "allow",
@@ -14,8 +15,6 @@
       "git worktree list *": "allow",
       "<test command> *": "allow",
       "<lint command> *": "allow",
-      "npx playwright test *": "allow",
-      "ffmpeg *": "allow",
       "git push *": "ask"
     }
   }

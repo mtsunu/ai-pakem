@@ -1,12 +1,6 @@
-// EXAMPLE demo script (Playwright Test). Copy to the project's demo folder as <slug>.demo.spec.ts
-// (location per AGENTS.md → Demo). It records a video of the AC scenarios and is also an E2E test.
-//
-//   Browsers stay project-local:  PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
-//   Run:                           PLAYWRIGHT_BROWSERS_PATH=0 npx playwright test <file> --reporter=line
-//   Output (gitignored):           .demo/<slug>.webm, .demo/AC-<n>.png
-//
-// Token rules: take selectors from the component source (getByRole / getByLabel / getByText);
-// never dump page HTML or the DOM into the conversation; the model never opens the video.
+// EXAMPLE demo script (Playwright Test). Copy to the demo folder from AGENTS.md → Demo as <slug>.demo.spec.ts.
+// Records a video of the AC scenarios; also an E2E test. Rules: see demo.md.
+// Run: .agents/skills/start-task/assets/demo.sh <file>   → .demo/<slug>.webm, .demo/AC-<n>.png
 import { test, expect, type Page } from '@playwright/test';
 
 const SLUG = '<task-slug>';
