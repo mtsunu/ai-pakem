@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.agents/skills/start-task/assets/worktree.sh *)",
+      "Bash(.agents/skills/start-task/assets/backlog.sh *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git worktree list *)",
+      "Bash(<test command> *)",
+      "Bash(<lint command> *)"
+    ],
+    "ask": [
+      "Bash(git push *)"
+    ]
+  }
+}
