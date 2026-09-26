@@ -64,7 +64,7 @@ Skipped → `<...>`.
 - **Subagents** (models from Subagent models): Claude Code `assets/agents/claude/*.md` → `.claude/agents/`; opencode `assets/agents/opencode/*.md` → `.opencode/agents/`; other tools → note "no subagent config".
 - **Permissions:** Claude Code `assets/permissions/claude-settings.json` → `.claude/settings.json` (shared); opencode `permission` block of `assets/permissions/opencode.json` → `opencode.json`. Fill in the test/lint commands; drop what doesn't apply.
 - **Worktree:** `.agents/worktree.conf.sh` from start-task's `worktree.conf.example.sh`, adapted to steps 2 and 4; unknowns → TODO.
-- **`.gitignore`:** `.worktrees/`, `.demo/`.
+- **`.gitignore`:** `.worktrees/`, `.demo/`, and `graphify-out/` if the project uses graphify (the graph is rebuilt locally, never committed; `worktree.sh` keeps it in sync from the diff).
 - **Playwright** (web UI without it): propose `@playwright/test` as a devDependency, browsers via `.agents/skills/start-task/assets/demo.sh install` (project-local). Only after approval.
 - Existing configs → merge, never overwrite; show the diff.
 - **CLAUDE.md** (Claude Code only): ensure it contains `@AGENTS.md` and nothing but Claude Code-specific extras.
