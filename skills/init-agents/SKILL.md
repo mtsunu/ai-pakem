@@ -12,9 +12,9 @@ Template: `assets/AGENTS.md` (aim for ≤ 50 lines; workflow rules live in `star
 1. **Testing** — test command and location ("none yet" allowed).
 2. **Rules & pitfalls** — may be short, must exist.
 3. **References** — ADR location; backlog location (`docs/tasks/` or tracker).
-4. **Workflow** — the `start-task` trigger line; the four skills in `.agents/skills/` and `skills-lock.json` committed.
+4. **Workflow** — the `start-task` trigger line; all ai-pakem skills in `.agents/skills/` and `skills-lock.json` committed.
 5. **Worktree** — `.agents/worktree.conf.sh`; `.worktrees/` in `.gitignore`.
-6. **Subagent models** — per tool in use, a reviewer model different from the main model.
+6. **Subagent models** — a model per role (main, implementer, research, retrieval, reviewer, reviewer strong) for every tool in use.
 7. **Demo** (UI projects) — start command, demo account, seed, script folder; `.demo/` in `.gitignore`; Playwright available.
 
 ## Rules
@@ -46,7 +46,7 @@ Look for `AGENTS.md` (root and subfolders), `CLAUDE.md`, `GEMINI.md`, `.cursorru
 - Never trim other content unilaterally. Monorepo: audit subfolder AGENTS.md too; new per-package files only if rules really differ, after asking.
 
 ## 4. Ask (all at once)
-Conflicts · pitfall candidates (real? more?) · testing (no-test exceptions, test data, slow tests, dedicated test DB via `ramdb.example.sh` on disk/RAM or regular) · tools in use + main/reviewer/research model each · worktree setup & cleanup commands · demo (start command, account, seed, script folder) · don'ts · ADR & backlog location · critical modules · summary (if not in README/brief) · branch pattern & base · team repo? · anyone on Windows? · large codebase (hundreds of code files) without a graph → set up graphify?
+Conflicts · pitfall candidates (real? more?) · testing (no-test exceptions, test data, slow tests, dedicated test DB via `ramdb.example.sh` on disk/RAM or regular) · tools in use + a model per role (Claude Code default: opus / sonnet / sonnet / haiku / sonnet / opus) · worktree setup & cleanup commands · demo (start command, account, seed, script folder) · don'ts · ADR & backlog location · critical modules · summary (if not in README/brief) · branch pattern & base · team repo? · anyone on Windows? · large codebase (hundreds of code files) without a graph → set up graphify?
 Skipped → `<...>`.
 
 ## 5. Write AGENTS.md
@@ -56,13 +56,13 @@ Skipped → `<...>`.
 - Project instructions in CLAUDE.md or other tool files → offer to move them into AGENTS.md.
 
 ## 6. Install into the repo
-- **Skills** — check `.agents/skills/` has all four and `skills-lock.json` exists. Missing → ask the user to run from the repo root:
+- **Skills** — check `.agents/skills/` has all ai-pakem skills and `skills-lock.json` exists. Missing → ask the user to run from the repo root:
   ```bash
   DISABLE_TELEMETRY=1 npx skills add mtsunu/ai-pakem -s '*' -a codex -a claude-code -y
   ```
   `-a codex` writes the shared `.agents/skills/` (also read by Gemini CLI, opencode, Cursor); `-a claude-code` adds symlinks in `.claude/skills/`. Always pass `-a` (auto-detection is unreliable). Windows on the team → `--copy`. Then start a new agent session.
   `.agents/skills/` is vendored: `update`/`add` overwrite it without warning, so never edit it — customize via AGENTS.md and `.agents/worktree.conf.sh`. Edits found there → report and propose moving them. Update: clean tree → `npx skills update -p` → review `git diff .agents/skills` → commit.
-- **Subagents** (models from Subagent models): Claude Code `assets/agents/claude/*.md` → `.claude/agents/`; opencode `assets/agents/opencode/*.md` → `.opencode/agents/`; other tools → note "no subagent config".
+- **Subagents** (`implementer`, `researcher`, `retriever`, `reviewer`, `reviewer-opus`; models from Subagent models): Claude Code `assets/agents/claude/*.md` → `.claude/agents/`; opencode `assets/agents/opencode/*.md` → `.opencode/agents/`; other tools → note "no subagent config".
 - **Permissions:** Claude Code `assets/permissions/claude-settings.json` → `.claude/settings.json` (shared); opencode `permission` block of `assets/permissions/opencode.json` → `opencode.json`. Fill in the test/lint commands; drop what doesn't apply.
 - **Worktree:** `.agents/worktree.conf.sh` from start-task's `worktree.conf.example.sh`, adapted to steps 2 and 4; unknowns → TODO.
 - **`.gitignore`:** `.worktrees/`, `.demo/`; with graphify also `graphify-out/` and `.agents/.venv/` (the graph is built locally, never committed; `worktree.sh` keeps it in sync from the diff).

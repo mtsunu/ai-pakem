@@ -7,7 +7,7 @@ Repo: https://github.com/mtsunu/ai-pakem (public). Folder lokal: `~/Work/llm-tem
 - **Simpel & hemat token.** Yang dimuat tiap sesi (AGENTS.md, description skill) dan tiap tugas (`start-task/SKILL.md`) sekecil mungkin; cabang jarang dipakai ada di file terpisah yang dibaca hanya saat perlu.
 - **Lintas tool** (Agent Skills / `SKILL.md`), tidak bergantung ke Claude Code.
 - **Semua lokal proyek**, di-commit: skill, konfigurasi, model, izin. Tidak ada yang dipasang di level user. CLAUDE.md global mesin ini tidak dibawa ke proyek.
-- **AC pusat, test dulu**, worktree per tugas, review subagent (model berbeda) wajib, demo video untuk tugas UI. Agent tidak push / membuat MR kecuali diperintah eksplisit.
+- **AC pusat, test dulu**, worktree per tugas, review subagent wajib, demo video untuk tugas UI. Agent tidak push / membuat MR kecuali diperintah eksplisit.
 - Skill ditulis dalam bahasa Inggris; agent menjawab & menulis prosa dokumen dalam bahasa user. Nama field header & nilai status tetap bahasa Inggris (dibaca skrip).
 - Proyek nyata (mis. kledo) hanya referensi — template harus generik.
 
@@ -18,6 +18,19 @@ Repo: https://github.com/mtsunu/ai-pakem (public). Folder lokal: `~/Work/llm-tem
 | `init-agents` | AGENTS.md mode NEW / ALIGN (≤ 50 baris, hanya fakta proyek) + pasang konfigurasi ke repo. Memuat definisi **Minimum requirements** (7 poin). |
 | `start-task` | Inti ±1k token, 6 langkah: mulai/lanjut → AC + triase (Small / Large / Feature, `UI:`) + rencana test (selalu ditampilkan) → eksekusi di worktree → demo (UI) → review → selesai. Cabang di `assets/large-task.md`, `feature-split.md`, `demo.md`. |
 | `research` | Subagent paralel per topik, maks. 5 temuan + sumber + keyakinan; klaim penting dicek ulang. |
+| `deep-review` | Hanya atas permintaan eksplisit user (agent boleh merekomendasikan). `reviewer-opus` + `assets/deep-review-prompt.md`: baca unit utuh, telusuri pemanggil/yang dipanggil, data, concurrency, migrasi, keamanan; setiap temuan dengan bukti (verified/plausible). Tidak memperbaiki sebelum user setuju. |
+
+## Model per peran
+| Peran | Claude Code | Kapan |
+|---|---|---|
+| Main | `opus` | Planning, AC, rencana test, sintesis — tidak didelegasikan |
+| Implementer | `sonnet` | Kode mekanis berpola jelas; main me-review diff. Tugas kecil dikerjakan main |
+| Research | `sonnet` | Subagent skill `research` |
+| Retrieval | `haiku` | Cari luas, log/dokumen panjang → ringkasan + `file:line` |
+| Reviewer | `sonnet` | Review biasa, tugas Small (1 putaran) |
+| Reviewer (strong) | `opus` | Review biasa Large/Feature/modul kritikal (maks. 2 putaran) + deep review |
+
+Aturan lama "reviewer harus beda model dari main" dihapus. Alias model (`opus`/`sonnet`/`haiku`) dipakai supaya ikut versi terbaru. Tabel ada di AGENTS.md; konfigurasi subagent di `.claude/agents/` & `.opencode/agents/`.
 
 ## Konvensi file
 - **Task file** `docs/tasks/<slug>.md`, di-commit bersama kode. Header: `Type: Task|Feature`, `Status: Backlog|Active|Done|Cancelled` (fitur: `Backlog|Cancelled`), `Priority: high|medium|low`, `Feature:`, `Depends:`, `Branch:`, `UI: yes|no`. Bagian wajib: Expected outcome, AC, Test plan, Next steps, Summary; lainnya hanya kalau perlu.

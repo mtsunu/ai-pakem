@@ -17,6 +17,7 @@ Everything is plain Markdown plus a few shell scripts, packaged as [Agent Skills
 | `init-agents` | Once per project (new or existing) | `AGENTS.md` + the workflow installed into the repo (skills, worktree config, subagent configs, tool permissions) |
 | `start-task` | Before **every** code change; triggered by a rule in `AGENTS.md` | Task file `docs/tasks/<slug>.md`, work in `.worktrees/<branch>`, subagent review, summary |
 | `research` | Used by the skills above, or directly ("research X") | Sourced findings (3–5 per topic) |
+| `deep-review` | Only when you ask for a "deep review" (the agent may recommend one) | Adversarial review with the strongest model: traces callers/callees, data, concurrency, security; every finding with evidence |
 
 ```
 New project:       project-kickoff → scaffold → init-agents → start-task, start-task, …
@@ -30,7 +31,8 @@ Existing project:                              init-agents → start-task, start
 - **Acceptance criteria are the center.** Give the expected outcome; the agent derives testable AC and a test plan.
 - **Automated tests are mandatory.** Agents must never weaken, delete, or skip a failing test without approval.
 - **Every task runs in its own git worktree** with its own `.env` and database; dependencies are cloned copy-on-write.
-- **Every task is reviewed by a subagent running a different model.**
+- **Every task is reviewed by a subagent** — Sonnet for small tasks, Opus for large / feature / critical-module tasks; a deep review (Opus, adversarial) only on request.
+- **Models per role:** planning stays with the main model (Opus); retrieval → Haiku; research and mechanical implementation → Sonnet.
 - **UI tasks come with a demo video** (Playwright) and one screenshot per acceptance criterion; the reviewer checks the screenshots.
 - **The agent never pushes or opens an MR/PR** unless explicitly told to.
 - **Skills are written in English; the agent answers in the user's language.**
@@ -75,6 +77,7 @@ skills/
 ├── init-agents/       SKILL.md + assets/ (AGENTS.md template, subagent configs, permission templates)
 ├── start-task/        SKILL.md (core flow) + assets/ (large-task, feature-split, demo guides loaded on demand;
 │                      task, feature, adr templates; review prompt; worktree.sh, backlog.sh, demo.sh, ramdb.example.sh)
-└── research/          SKILL.md
+├── research/          SKILL.md
+└── deep-review/       SKILL.md + assets/deep-review-prompt.md
 NOTES.md               design decisions and open items (Indonesian)
 ```

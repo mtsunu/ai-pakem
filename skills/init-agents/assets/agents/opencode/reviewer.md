@@ -1,7 +1,7 @@
 ---
-description: Reviews code changes against the acceptance criteria in the task file. Used by the start-task review step.
+description: Standard review of a task's changes against its acceptance criteria. Used by start-task (Small tasks).
 mode: subagent
-model: <provider/reviewer-model — preferably a different vendor from the main model>
+model: <provider/mid-model>
 permission:
   edit: deny
 ---

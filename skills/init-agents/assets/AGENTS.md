@@ -42,9 +42,10 @@
 - Branch `<pattern>` from `<base branch>`; commits `<format>`. Worktree config: `.agents/worktree.conf.sh`.
 
 ## Subagent models
-| Tool | Main | Reviewer (must differ) | Research |
-|---|---|---|---|
-| <tool> | `<model>` | `<model>` | `<model>` |
+| Tool | Main | Implementer | Research | Retrieval | Reviewer | Reviewer (strong) |
+|---|---|---|---|---|---|---|
+| Claude Code | `opus` | `sonnet` | `sonnet` | `haiku` | `sonnet` | `opus` |
+| <other tool> | `<model>` | `<model>` | `<model>` | `<model>` | `<model>` | `<model>` |
 
 ## Demo (UI)
 - App `<start command>` → `http://localhost:<port>` · demo account `<user/pass from seed>` · seed `<command>` · scripts in `<folder>`

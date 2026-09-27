@@ -1,7 +1,7 @@
 ---
 description: Researches one topic and returns sourced findings. Used by the research skill.
 mode: subagent
-model: <provider/research-model>
+model: <provider/mid-model>
 permission:
   edit: deny
 ---

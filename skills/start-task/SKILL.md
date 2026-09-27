@@ -12,6 +12,7 @@ Rules for every task:
 - **One worktree per task:** from the repo root run `.agents/skills/start-task/assets/worktree.sh create <branch>` (branch pattern per AGENTS.md → Workflow), then work only inside `.worktrees/<branch-slug>` (`/` → `-`).
 - **Never push or open an MR/PR** unless the user explicitly says so. Never edit `.agents/skills/` (vendored).
 - **Small tasks stay fast:** no questions or documents that aren't needed.
+- **Delegation** (models: AGENTS.md → Subagent models). Planning, AC, and test plans stay with you. Wide searches, long logs or docs → `retriever` subagent (summary + paths back). Mechanical, well-specified code (same pattern across files, tests like existing ones) → `implementer` subagent, then review its diff. Small tasks: do it yourself.
 - Talk in the user's language and write document prose in it (unless the repo's docs use another). Keep template headings, header fields, and status values unchanged — scripts parse them.
 - Run scripts exactly as `.agents/skills/start-task/assets/<script>.sh …` so permission rules match.
 
@@ -40,9 +41,10 @@ Rules for every task:
 Follow `assets/demo.md`, before the review, so the reviewer gets the screenshots.
 
 ## 5. Review (every task)
-- Reviewer subagent using the model from AGENTS.md → Subagent models (must differ from yours). Input: `assets/review-prompt.md`, the diff against the base branch, the task file, AGENTS.md, and for UI tasks `.demo/AC-<n>.png`.
+- Reviewer subagent: Small → `reviewer`; Large / Feature / a critical module from AGENTS.md → `reviewer-opus`. Input: `assets/review-prompt.md`, the diff against the base branch, the task file, AGENTS.md, and for UI tasks `.demo/AC-<n>.png`.
 - Fix the findings and review again — Small: 1 round; Large / Feature: at most 2. Leftovers go into the Summary.
 - Tool without subagents → ask the user to run `assets/review-prompt.md` in another session with the reviewer model.
+- Never run a deep review yourself. Recommend one in the Summary (the user starts the `deep-review` skill) when the change touches a critical module, money, security, data migration, or concurrency; the diff is large and cross-module; severe findings kept recurring; or a root cause isn't fully verified.
 
 ## 6. Done
 - Every AC has a passing test; the relevant suite and lint pass; UI demo recorded after the last UI change; no severe review findings left.

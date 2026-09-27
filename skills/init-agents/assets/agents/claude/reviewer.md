@@ -1,8 +1,8 @@
 ---
 name: reviewer
-description: Reviews code changes against the acceptance criteria in the task file. Used by the start-task review step.
+description: Standard review of a task's changes against its acceptance criteria. Used by start-task (Small tasks).
 tools: Read, Grep, Glob, Bash
-model: <reviewer model — must differ from the main model>
+model: sonnet
 ---
 
 Follow the instructions in `.agents/skills/start-task/assets/review-prompt.md`. Do not modify any file.
